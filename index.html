@@ -1,0 +1,97 @@
+<head>
+  <title>bird</title>
+  <link rel="icon" href="./assets/bird.png" sizes="16x16" type="image/png">
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    #c {
+      width: 100%;
+      height: 100%;
+    }
+    audio{
+      display:none;
+    }
+  </style>
+
+</head>
+
+<body>
+  <canvas id="c"></canvas>
+  <audio autoplay loop>
+    <source src="./assets/livin.ogg" type="audio/ogg">
+  </audio>
+  <script>
+    var ctx;
+    var imgDrops;
+    var x = 0;
+    var y = 0;
+    var noOfDrops = Math.floor(window.innerWidth/4);
+    var fallingDrops = [];
+    var backgrounds = ['#fff6e0', '#dbebff'];
+    var selectedBackground = Math.floor(Math.random() * backgrounds.length);
+    var poopChance = 1/1000000;
+
+    window.onresize = function(){
+        ctx.canvas.width  = window.innerWidth;
+        ctx.canvas.height = window.innerHeight;
+        noOfDrops = Math.floor(window.innerWidth/4);
+    }
+
+    function drawBackground() {
+      var canvas = document.getElementById('c');
+
+      ctx.fillStyle = backgrounds[selectedBackground];
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function draw() {
+      drawBackground();
+
+      for (var i = 0; i < noOfDrops; i++) {
+        ctx.drawImage(fallingDrops[i].image, fallingDrops[i].x, fallingDrops[i].y);
+
+        fallingDrops[i].y += fallingDrops[i].speed;
+        if (fallingDrops[i].y > window.innerHeight) {
+          fallingDrops[i].y = -85
+          fallingDrops[i].x = (Math.random() * window.innerWidth) - (Math.random() * 50);
+          if (poopChance > Math.random()) {
+            fallingDrops[i].image.src = './assets/poo.png'
+          } else {
+            fallingDrops[i].image.src = './assets/bird.png'
+          }
+        }
+
+      }
+    }
+
+    function setup() {
+      var canvas = document.getElementById('c');
+
+      if (canvas.getContext) {
+        ctx = canvas.getContext('2d');
+        ctx.canvas.width  = window.innerWidth;
+        ctx.canvas.height = window.innerHeight;
+        
+        setInterval(draw, 36);
+        for (var i = 0; i < noOfDrops; i++) {
+          var fallingDr = new Object();
+          fallingDr["image"] = new Image();
+          fallingDr.image.src = './assets/bird.png';
+
+          fallingDr["x"] = Math.random() * window.innerWidth;
+          fallingDr["y"] = Math.random() * window.innerHeight;
+          fallingDr["speed"] = 3 + Math.random() * 5;
+          fallingDrops.push(fallingDr);
+        }
+
+      }
+    }
+    setup();
+
+  </script>
+</body>
