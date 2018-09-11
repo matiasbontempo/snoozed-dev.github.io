@@ -13,9 +13,7 @@
       width: 100%;
       height: 100%;
     }
-    audio{
-      display:none;
-    }
+
   </style>
 
 </head>
@@ -26,39 +24,53 @@
     <source src="./assets/livin.ogg" type="audio/ogg">
   </audio>
   <script>
-    var ctx;
-    var imgDrops;
-    var x = 0;
-    var y = 0;
-    var noOfDrops = Math.floor(window.innerWidth/4);
-    var fallingDrops = [];
-    var backgrounds = ['#fff6e0', '#dbebff'];
-    var selectedBackground = Math.floor(Math.random() * backgrounds.length);
-    var poopChance = 1/1000000;
+    const backgrounds = ['#fff6e0', '#dbebff']
+    const selectedBackground = Math.floor(Math.random() * backgrounds.length)
+    let ctx, imgDrops
+    let x = 0
+    let y = 0
+    let noOfDrops = Math.floor(window.innerWidth/4)
+    let fallingDrops = []
+    let poopChance = 1/1000000
 
     window.onresize = function(){
-        ctx.canvas.width  = window.innerWidth;
-        ctx.canvas.height = window.innerHeight;
-        noOfDrops = Math.floor(window.innerWidth/4);
+        ctx.canvas.width  = window.innerWidth
+        ctx.canvas.height = window.innerHeight
+        noOfDrops = Math.floor(window.innerWidth/4)
     }
 
     function drawBackground() {
-      var canvas = document.getElementById('c');
+      let canvas = document.getElementById('c')
 
-      ctx.fillStyle = backgrounds[selectedBackground];
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = backgrounds[selectedBackground]
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+    }
+
+    function compare(a,b) {
+      if (a.scale < b.scale)
+        return -1
+      if (a.scale > b.scale)
+        return 1
+      return 0
     }
 
     function draw() {
-      drawBackground();
+      drawBackground()
 
-      for (var i = 0; i < noOfDrops; i++) {
-        ctx.drawImage(fallingDrops[i].image, fallingDrops[i].x, fallingDrops[i].y);
+      for (let i = 0; i < fallingDrops.length - 1; i++) {
+        ctx.globalAlpha = fallingDrops[i].scale;
+        ctx.drawImage(
+          fallingDrops[i].image,
+          fallingDrops[i].x,
+          fallingDrops[i].y,
+          fallingDrops[i].image.width * fallingDrops[i].scale,
+          fallingDrops[i].image.height * fallingDrops[i].scale
+        )
 
-        fallingDrops[i].y += fallingDrops[i].speed;
+        fallingDrops[i].y += fallingDrops[i].speed
         if (fallingDrops[i].y > window.innerHeight) {
           fallingDrops[i].y = -85
-          fallingDrops[i].x = (Math.random() * window.innerWidth) - (Math.random() * 50);
+          fallingDrops[i].x = (Math.random() * window.innerWidth) - (Math.random() * 50)
           if (poopChance > Math.random()) {
             fallingDrops[i].image.src = './assets/poo.png'
           } else {
@@ -70,7 +82,7 @@
     }
 
     function setup() {
-      var canvas = document.getElementById('c');
+      let canvas = document.getElementById('c');
 
       if (canvas.getContext) {
         ctx = canvas.getContext('2d');
@@ -78,16 +90,19 @@
         ctx.canvas.height = window.innerHeight;
         
         setInterval(draw, 36);
-        for (var i = 0; i < noOfDrops; i++) {
-          var fallingDr = new Object();
+        for (let i = 0; i < noOfDrops; i++) {
+          let fallingDr = new Object();
           fallingDr["image"] = new Image();
           fallingDr.image.src = './assets/bird.png';
 
           fallingDr["x"] = Math.random() * window.innerWidth;
           fallingDr["y"] = Math.random() * window.innerHeight;
           fallingDr["speed"] = 3 + Math.random() * 5;
+          fallingDr["scale"] = (fallingDr["speed"] - 2.5) / 4;
           fallingDrops.push(fallingDr);
         }
+
+        fallingDrops.sort(compare)
 
       }
     }
