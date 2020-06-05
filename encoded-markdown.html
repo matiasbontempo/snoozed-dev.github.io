@@ -1,44 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
-    <meta content="utf-8" http-equiv="encoding" />
-    <link rel="stylesheet" href="./css/encoded-markdown.css" />
-  </head>
-  <body>
-    <div id="encode-modal">
-      <div id="modal-body">
-        <button id="close-modal">
-          X
-        </button>
-        <span>Paste your plain MD here and get a link!</span>
-        <textarea res id="text-input" rows="8"></textarea>
-        <button id="clipboard-button" class="button">
-          Generate and copy to clipboard.
-        </button>
-        <div id="success">
-          <span>Successfully copied the link:</span>
-          <a id="link"></a>
-        </div>
-      </div>
-      <div id="modal-backdrop"></div>
-    </div>
-    <div id="preview">Loading...</div>
-    <div class="bottom-row">
-      <button id="encode-modal-button" class="button">
-        I want an encoded MD link too!
+
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+  <meta content="utf-8" http-equiv="encoding" />
+  <link rel="stylesheet" href="./css/encoded-markdown.css" />
+</head>
+
+<body>
+  <div id="encode-modal">
+    <div id="modal-body">
+      <button id="close-modal">
+        X
       </button>
-      <a
-        class="button icon"
-        href="https://github.com/snoozed-dev/snoozed-dev.github.io"
-      >
-        See horrible source code
-        <img src="./assets/github_white.svg" height="24em" />
-      </a>
+      <span>Paste your plain MD here and get a link!</span>
+      <textarea res id="text-input" rows="8"></textarea>
+      <button id="clipboard-button" class="button">
+        Generate and copy to clipboard.
+      </button>
+      <div id="success">
+        <span>Successfully copied the link:</span>
+        <a id="link"></a>
+      </div>
     </div>
-    <script src="./lib/jquery-3.5.1.js"></script>
-    <script src="./lib/lzutf8.js"></script>
-    <script src="./lib/markdown-it-11.0.0.js"></script>
-    <script src="./js/encoded-markdown.js"></script>
-  </body>
+    <div id="modal-backdrop"></div>
+  </div>
+  <div id="preview">Loading...</div>
+  <div class="bottom-row">
+    <button id="encode-modal-button" class="button">
+      I want an encoded MD link too!
+    </button>
+    <a class="button icon" href="https://github.com/snoozed-dev/snoozed-dev.github.io">
+      See horrible source code
+      <img src="./assets/github_white.svg" height="24em" />
+    </a>
+  </div>
+  <script src="./lib/lzutf8.js"></script>
+  <script src="./lib/markdown-it-11.0.0.js"></script>
+  <script src="./js/encoded-markdown.js"></script>
+</body>
+
 </html>
