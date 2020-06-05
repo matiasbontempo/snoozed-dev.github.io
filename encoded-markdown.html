@@ -3,180 +3,13 @@
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
     <meta content="utf-8" http-equiv="encoding" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inconsolata&family=Nunito&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <style>
-      .hide {
-        display: none;
-      }
-      * {
-        font-family: "Nunito";
-      }
-      body {
-        background-color: #b8b8b8;
-        color: #222222;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 40px;
-        flex-direction: column;
-      }
-      #preview {
-        background-color: #f7f7f7;
-        width: 65em;
-        border-radius: 5px;
-        padding: 30px 25px;
-        margin-bottom: 30px;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-      }
-      code {
-        font-family: "Inconsolata";
-        background-color: #e2e2e2;
-        padding: 3px 5px;
-        border-radius: 5px;
-      }
-      h1 {
-        margin: 0;
-      }
-
-      #encode-modal {
-        position: fixed;
-        top: 0px;
-        right: 0px;
-        bottom: 0px;
-        left: 0px;
-        justify-content: center;
-        align-items: center;
-        display: flex;
-        opacity: 0;
-        pointer-events: none;
-        transition: all 150ms ease-in-out;
-      }
-      #modal-backdrop {
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        bottom: 0px;
-        left: 0px;
-        background-color: #22222220;
-      }
-      #modal-body {
-        position: relative;
-        padding: 40px;
-        border-radius: 5px;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-        background-color: white;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        max-height: 45vh;
-        overflow: visible;
-        overflow-y: auto;
-        width: 40em;
-      }
-      #encode-modal.visible {
-        opacity: 1;
-        pointer-events: all;
-      }
-      #text-input {
-        border: #cecece 1px solid;
-        resize: none;
-        margin: 20px 0;
-      }
-
-      #clipboard-button {
-        margin: auto;
-      }
-      #success {
-        width: 40em;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        margin: 20px 0;
-        display: none;
-      }
-      #success.visible {
-        display: flex;
-      }
-      #link {
-        width: inherit;
-        word-wrap: break-word;
-        font-size: 0.4em;
-        margin-bottom: 40px;
-      }
-      #close-modal {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        border: none;
-        color: #222222;
-        font-size: 1.2em;
-        font-family: "nunito";
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        padding: 5px;
-        background-color: white;
-        cursor: pointer;
-        padding: 10px;
-      }
-
-      .bottom-row {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .bottom-row .fa {
-        position: absolute;
-        right: 0.4em;
-        font-size: 2em;
-      }
-
-      .button {
-        position: relative;
-        cursor: pointer;
-        background-color: #222222;
-        color: white;
-        border: none;
-        padding: 1em 1.8em;
-        border-radius: 1.8em;
-        font-size: 0.8em;
-        margin: 0 10px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-decoration: none;
-      }
-
-      .button.icon {
-        padding-right: 3.2em;
-      }
-
-      @media screen and (max-width: 1600px) {
-        #preview {
-          width: 45em;
-        }
-      }
-      @media screen and (max-width: 1000px) {
-        #preview {
-          width: 30em;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="./css/encoded-markdown.css" />
   </head>
   <body>
     <div id="encode-modal">
       <div id="modal-body">
         <button id="close-modal">
-          <i class="fa fa-times" aria-hidden="true"></i>
+          X
         </button>
         <span>Paste your plain MD here and get a link!</span>
         <textarea res id="text-input" rows="8"></textarea>
@@ -190,7 +23,7 @@
       </div>
       <div id="modal-backdrop"></div>
     </div>
-    <div id="preview">Nothing to render.</div>
+    <div id="preview">Loading...</div>
     <div class="bottom-row">
       <button id="encode-modal-button" class="button">
         I want an encoded MD link too!
@@ -199,85 +32,13 @@
         class="button icon"
         href="https://github.com/snoozed-dev/snoozed-dev.github.io"
       >
-        See horrible source code <i class="fa fa-github" aria-hidden="true"></i>
+        See horrible source code
+        <img src="./assets/github_white.svg" height="24em" />
       </a>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/11.0.0/markdown-it.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lzutf8/build/production/lzutf8.min.js"></script>
-    <script>
-      $(() => {
-        var encodeModalSeen = false;
-
-        var md = window.markdownit({
-          html: true,
-          breaks: true,
-          linkify: true,
-          typographer: false,
-        });
-
-        function getUrlParameter(sParam) {
-          var sPageURL = window.location.search.substring(1),
-            sURLVariables = sPageURL.split("&"),
-            sParameterName,
-            i;
-
-          for (i = 0; i < sURLVariables.length; i++) {
-            sParameterName = sURLVariables[i].split("=");
-
-            if (sParameterName[0] === sParam) {
-              return sParameterName[1] === undefined
-                ? true
-                : decodeURIComponent(sParameterName[1]);
-            }
-          }
-        }
-
-        function encodeInputText() {
-          const link = `${window.location.protocol}//${
-            window.location.hostname
-          }${window.location.pathname}?md=${encodeURIComponent(
-            LZUTF8.encodeBase64(
-              LZUTF8.compress($("#text-input").val(), [
-                { outputEncoding: "Base64" },
-              ])
-            )
-          )}`;
-
-          const el = document.createElement("textarea");
-          el.value = link;
-          document.body.appendChild(el);
-          el.select();
-          document.execCommand("copy");
-          document.body.removeChild(el);
-
-          $("#link").html(link).attr("href", link);
-          $("#success").addClass("visible");
-        }
-
-        function toggleModal() {
-          $("#encode-modal").toggleClass("visible");
-        }
-
-        $("#clipboard-button").on("click", encodeInputText);
-        $("#encode-modal-button").on("click", toggleModal);
-        $("#modal-backdrop").on("click", toggleModal);
-        $("#close-modal").on("click", toggleModal);
-
-        $("#preview").html(
-          md.render(
-            LZUTF8.decompress(LZUTF8.decodeBase64(getUrlParameter("md")), [
-              { inputEncoding: "Base64" },
-            ])
-          )
-        );
-
-        console.log(
-          LZUTF8.encodeBase64(
-            LZUTF8.compress("bro", [{ outputEncoding: "Base64" }])
-          )
-        );
-      });
-    </script>
+    <script src="./lib/jquery-3.5.1.js"></script>
+    <script src="./lib/lzutf8.js"></script>
+    <script src="./lib/markdown-it-11.0.0.js"></script>
+    <script src="./js/encoded-markdown.js"></script>
   </body>
 </html>
