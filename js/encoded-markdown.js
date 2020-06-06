@@ -20,11 +20,11 @@ function getUrlParameter(sParam) {
 function encodeInputText() {
   const link = `${window.location.protocol}//${window.location.hostname}${
     window.location.pathname
-    }?md=${encodeURIComponent(
-      LZUTF8.encodeBase64(
-        LZUTF8.compress($("#text-input").value, [{ outputEncoding: "Base64" }])
-      )
-    )}`;
+  }?md=${encodeURIComponent(
+    LZUTF8.encodeBase64(
+      LZUTF8.compress($("#text-input").value, [{ outputEncoding: "Base64" }])
+    )
+  )}`;
 
   const el = document.createElement("textarea");
   el.value = link;
@@ -40,11 +40,11 @@ function encodeInputText() {
 
 function toggleModal() {
   const $modal = $("#encode-modal");
-  if ($modal.classList.contains('visible')) $modal.classList.remove('visible');
-  else $modal.classList.add('visible');
+  if ($modal.classList.contains("visible")) $modal.classList.remove("visible");
+  else $modal.classList.add("visible");
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   const md = window.markdownit({
     html: true,
     breaks: true,
@@ -52,16 +52,16 @@ document.addEventListener('DOMContentLoaded', () => {
     typographer: false,
   });
 
+  const markdownString = LZUTF8.decompress(
+    LZUTF8.decodeBase64(getUrlParameter("md")),
+    [{ inputEncoding: "Base64" }]
+  );
 
   $("#clipboard-button").addEventListener("click", encodeInputText);
   $("#encode-modal-button").addEventListener("click", toggleModal);
   $("#modal-backdrop").addEventListener("click", toggleModal);
   $("#close-modal").addEventListener("click", toggleModal);
 
-  $("#preview").innerHTML = md.render(
-    LZUTF8.decompress(
-      LZUTF8.decodeBase64(getUrlParameter("md")),
-      [{ inputEncoding: "Base64" }]
-    )
-  );
+  $("#text-input").value = markdownString;
+  $("#preview").innerHTML = md.render(markdownString);
 });
